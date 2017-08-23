@@ -11,13 +11,7 @@ value = form.getvalue('config')
 
 PATH = '~/eth_miner/config.txt'
 
-
-
-print("Content-type: text/html\n")
-
-
 def mining(args):
-	
 	for i in args:
 		if len(i) == 0:
 			print(json.dumps("non_input"))
