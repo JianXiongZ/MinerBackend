@@ -3,6 +3,7 @@
 
 import cgi, cgitb
 import os
+import json
 
 form = cgi.FieldStorage()
 
@@ -15,9 +16,12 @@ PATH = '/home/jianxiong/eth_miner/config.txt'
 print("Content-type: text/html\n")
 
 
-
-
 def mining(args):
+	
+	for i in args:
+		if len(i) == 0:
+			print(json.dumps("non_input"))
+			return None
 	fhandler = open(PATH, 'wt')
 	if len(args) == 3:
 		fhandler.write('-epool ' + args[0] + '\n-ewal ' + args[1] + '\n-epsw ' + args[2] + '\n-mode 1')
