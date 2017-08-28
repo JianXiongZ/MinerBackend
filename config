@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+#encoding: utf-8
+
+import cgi, cgitb
+import sys
+import json
+from cherrypy import wsgiserver
+from . import mining
+
+print("Content-type: text/html\n")
+
+
+form = cgi.FieldStorage()
+
+PATH_SAVE = '/home/jianxiong/eth_miner/config_save.txt'
+PATH = '/home/jianxiong/eth_miner/config.txt'
+
+if 'config_mining' in form:
+    value = form.getvalue('config_mining')
+    args = value.split(',')
+
+    fhandler = open(PATH, 'wt')
+
+    for i in args:
+        if len(i) == 0:
+            print("non_input")
+            sys.exit()
+    if len(args) == 3:
+    	fhandler.write('-epool ' + args[0] + '\n-ewal ' + args[1] + '\n-epsw ' + args[2] + '\n-mode 1')
+    elif len(args) == 4:
+    	fhandler.write('-epool ' + args[0] + '\n-ewal ' + args[1] + '\n-epsw ' + args[2] + '\n-eworker ' + args[3] +'\n-mode 1')
+    elif len(args) == 6:
+    	fhandler.write('-epool ' + args[0] + '\n-ewal ' + args[1] + '\n-epsw ' + args[2] + '\n-dpool ' + args[3] + '\n-dwal ' + args[4] + '\n-dpasw ' + args[5])
+    elif len(args) == 7:
+    	fhandler.write('-epool ' + args[0] + '\n-ewal ' + args[1] + '\n-epsw ' + args[2] + '\n-eworker ' + args[3] + '\n-dpool ' + args[4] + '\n-dwal ' + args[5] + '\n-dpasw ' + args[6])
+
+    fhandler.close()
+
+
+    server = wsgiserver.CherryPyWSGIServer(('127.0.0.1', 8080), mining.application)
+    server.start()
+    print('{"miner_status":"start"}')
+
+elif 'config_save' in form:
+    config_list = form.getvalue('config_save')
+    fhandler = open(PATH_SAVE, 'wt')
+    for i in value:
+        fhandler.write(i)
+
+    fhandler.close()
+    print(json.dumps({"config_save":"successed"}))
