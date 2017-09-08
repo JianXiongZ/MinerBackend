@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+sleep 3
+/usr/bin/firefox http://127.0.0.1/eth_miner
+
+
