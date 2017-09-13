@@ -9,8 +9,8 @@ value = fhandler.read().split('\n')
 
 result = {}
 for i in value:
-	con = i.split(' ')
-	result[con[0]] = con[1]
+    con = i.split(' ')
+    result[con[0]] = con[1]
 
 fhandler.close()
 

@@ -4,16 +4,17 @@
 import cgi, cgitb
 import sys
 import json
+import subprocess
 
 from mining import application
-from cherrypy import wsgiserver
+#from cherrypy import wsgiserver
 
 
 print("Content-type: text/html")
 print("")
 
 form = cgi.FieldStorage()
-
+cgitb.enable()
 
 PATH_SAVE = '/opt/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner/config_save.txt'
 PATH = '/opt/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner/config.txt'
@@ -27,7 +28,10 @@ if 'config_mining' in form:
     value = form.getvalue('config_mining')
     args = value.split(',')
     mining_pool = args.pop(0)
-    du_mining_pool = args.pop(-1)
+    if len(args) <= 4:
+        du_mining_pool = "decred"
+    else:
+        du_mining_pool = args.pop(-1)
 
     fhandler = open(PATH, 'wt')
 
@@ -59,9 +63,10 @@ if 'config_mining' in form:
     f.close()
           
     write_data(con) 
-
-    server = wsgiserver.CherryPyWSGIServer(('127.0.0.1', 8080), application)
-    server.start()
+    
+#    server = wsgiserver.CherryPyWSGIServer(('127.0.0.1', 8080), application)
+#    server.start()
+    subprocess.Popen(['sudo /opt/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner/ethdcrminer64'], shell=True)
 
 elif 'config_save' in form:
     config_list = form.getvalue('config_save')
@@ -91,5 +96,5 @@ elif 'config_save' in form:
           
     write_data(con)
 
-print(json.dumps({"config_save":"successed"}))
+    print(json.dumps({"config_save":"successed"}))
 
